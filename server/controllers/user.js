@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 export async function getAllUsers(req, res) {
+    //console.log(req.user)
+
     try {
         const users = await User.find();
 
@@ -25,6 +27,7 @@ export async function loginUser(req, res) {
         });
 
         if(user) {
+            //  access token
             const token = jwt.sign(
                 {
                     username: username,
@@ -33,7 +36,7 @@ export async function loginUser(req, res) {
                 JWT_SECRET_KEY
             );
             
-            res.json({ success: true, user: token });
+            res.json({ success: true, user: { username, token } });
         }
         else {
             res.json({ success: false, msg: 'Failed to find user' });
@@ -66,15 +69,15 @@ export async function createUser(req, res) {
 
             console.log(`Creating new user: ${newUser}`);
 
+            //  access token
             const token = jwt.sign(
                 {
-                    username: username,
-                    password: password
+                    username: username
                 },
                 JWT_SECRET_KEY
             );
 
-            res.json({ success: true, user: token });
+            res.json({ success: true, user: { username, token } });
         }
         else {
             res.json({ success: false, msg: 'Failed to create user' });
