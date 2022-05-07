@@ -5,16 +5,17 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logo from '../assets/logo.svg';
 import styles from '../styles/Home.module.css';
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function Sidebar({ setMode, mode }) {
-
+    const navigate = useNavigate();
 
     async function handleLogOut(e) {
         e.preventDefault();
 
-
+        localStorage.removeItem('user');
+        navigate('/login');
     }
 
     return (

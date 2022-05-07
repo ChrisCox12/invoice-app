@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 import userRoutes from './routes/users.js';
+import invoiceRoutes from './routes/invoices.js';
 
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 const PORT = process.env.PORT;
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/users', userRoutes);
+app.use('/invoices', invoiceRoutes);
 
 
 mongoose

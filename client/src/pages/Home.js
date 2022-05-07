@@ -14,6 +14,7 @@ import EmptyIllustration from '../assets/illustration-empty.svg';
 import styles from '../styles/Home.module.css';
 import InvoicesList from "../components/InvoicesList";
 import InvoiceForm from "../components/InvoiceForm";
+import api from "../api/api";
 
 
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
@@ -57,6 +58,7 @@ export default function HomePage({ setMode, mode }) {
         }
         else {
             //console.log(userToken)
+            //console.log('found user token')
             setUser( jwt_decode(userToken) );
             //console.log(jwt_decode(userToken))
             getInvoices( jwt_decode(userToken) );
@@ -64,12 +66,15 @@ export default function HomePage({ setMode, mode }) {
 
         async function getInvoices(user) {
             try {
-                const response = await axios.get(REACT_APP_API_URL.concat('invoices/', user.username));
+                //const response = await axios.get(REACT_APP_API_URL.concat('invoices/', user.username));
+                
+                const response = await api.get(`invoices/user/${user.username}`);
 
                 console.log(response);
 
                 if(response.data.success) {
                     setInvoices(response.data.invoices);
+                    setFilteredInvoices(response.data.invoices);
                 }
                 else {
                     alert(response.data.msg);
@@ -238,7 +243,7 @@ export default function HomePage({ setMode, mode }) {
             </AppBar>
 
             {invoices.length > 0 ?
-               <InvoicesList />
+               <InvoicesList invoices={filteredInvoices} />
                :
                <Box>
                    <img src={EmptyIllustration} />

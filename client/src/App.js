@@ -19,20 +19,31 @@ export default function App() {
         palette: {
             addButton: '#F9FAFE',
             editButton: '#F9FAFE',
+            deleteButton: '#EC5757',
+            editButtonHover: '#DFE3FA',
             sidebar: '#373B53',
             invoice: 'white',
+            invoiceClientName: '#858BB2',
             appBackground: '#f8f8f8',
             menuBackground: 'white',
             formBackground: 'white',
             inputBackground: 'white',
             datePickerBackground: 'white',
+            invoiceItemsBackground: '#F9FAFE',
+            amountDueBackground: '#374353',
             inputBorder: 'hsl(0, 0%, 0%, 0.23)',
             'text--1': '#0C0E16',
             'text--2': '#888EB0',
             'text--3': '#7E88C3',
             'text--4': '#7E88C3',
             primaryPurple: '#7C5DFA',
-            secondaryPurple: '#9277FF'
+            secondaryPurple: '#9277FF',
+            statusColorPaid: '#33D69F',
+            statusColorPending: '#FF8F00',
+            statusColorDraft: '#7E88C3',
+            statusBgPaid: 'hsla(160, 67%, 52%, 0.15)',
+            statusBgPending: 'hsla(34, 100%, 50%, 0.15)',
+            statusBgDraft: 'hsla(231, 20%, 27%, 0.15)'
         },
         typography: {
             fontFamily: 'Manrope'
@@ -43,20 +54,31 @@ export default function App() {
         palette: {
             addButton: '#252945',
             editButton: '#252945',
+            deleteButton: '#EC5757',
+            editButtonHover: 'white',
             sidebar: '#1E2139',
             invoice: '#1E2139',
+            invoiceClientName: 'white',
             appBackground: '#141625',
             menuBackground: '#252945',
             formBackground: '#141625',
             inputBackground: '#252945',
             datePickerBackground: '#1E2139',
+            invoiceItemsBackground: '#252945',
+            amountDueBackground: '#0C0E16',
             inputBorder: '#252945',
             'text--1': 'white',
             'text--2': '#DFE3FA',
             'text--3': '#DFE3FA',
             'text--4': '#888EB0',
             primaryPurple: '#7C5DFA',
-            secondaryPurple: '#9277FF'
+            secondaryPurple: '#9277FF',
+            statusColorPaid: '#33D69F',
+            statusColorPending: '#FF8F00',
+            statusColorDraft: '#7E88C3',
+            statusBgPaid: 'hsla(160, 67%, 52%, 0.15)',
+            statusBgPending: 'hsla(34, 100%, 50%, 0.15)',
+            statusBgDraft: 'hsla(231, 20%, 27%, 0.15)'
         },
         typography: {
             fontFamily: 'Manrope'
@@ -82,7 +104,7 @@ export default function App() {
                     <Route element={<Layout setMode={setMode} mode={mode} />}>
                         <Route index element={<HomePage setMode={setMode} mode={mode} />} />
                         <Route path='home' element={<HomePage setMode={setMode} mode={mode} />}/>
-                        <Route path='invoice' element={<InvoicePage />} />
+                        <Route path='invoice/:id' element={<InvoicePage />} />
                     </Route>
                     
                     

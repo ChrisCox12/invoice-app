@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import styles from '../styles/Home.module.css';
-
+import api from "../api/api.js";
 
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
@@ -16,7 +16,7 @@ export default function Login() {
 
     useEffect(() => {
         if(localStorage.getItem('user')) {
-            navigate('/home');
+            navigate('/');
         }
     }, []);
     
@@ -27,13 +27,14 @@ export default function Login() {
         const toSubmit = { username: username, password: password };
 
         try {
-            const response = await axios.post(REACT_APP_API_URL.concat('users/login'), toSubmit);
-            
+            //const response = await axios.post(REACT_APP_API_URL.concat('users/login'), toSubmit);
+            const response = await api.post('users/login', toSubmit);
 
             console.log(response);
 
-            if(response.data.sucess) {
-                
+            if(response.data.success) {
+                localStorage.setItem('user', response.data.user.token);
+                navigate('/');
             }
             else {
                 alert(response.data.msg);

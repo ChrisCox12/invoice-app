@@ -9,6 +9,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import api from "../api/api";
+import jwtDecode from "jwt-decode";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 
 function CustomTextField(props) {
@@ -75,6 +79,7 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
     const [anchorEl, setAnchorEl] = useState(null);
     const [openMenu, setOpenMenu] = useState(false);
     const [items, setItems] = useState([]);
+    const [user, setUser] = useState(null);
 
 
     useEffect(() => {
@@ -83,7 +88,15 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
             setFormInvoice(invoice);
             setItems([...invoice.items]);
         }
+        
+        if(localStorage.getItem('user')){
+           const decodedToken = jwtDecode( localStorage.getItem('user') );
+            setUser(decodedToken); 
+        }
+        
     }, []);
+
+    useEffect(() => {console.log(user)}, [user])
 
     function handleClose() {
         setAnchorEl(null);
@@ -256,13 +269,19 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
         const toSubmit = { ...formInvoice, total: total, items: items };
 
         try {
-            const response = await axios.patch();
+            //const response = await axios.patch();
+            const response = await api.patch(
+                `invoices/${invoice._id}`, 
+                toSubmit, 
+                { 
+                    headers: { 'authorization': `Bearer ${localStorage.getItem('user')}` } 
+                });
 
             console.log(response);
 
             if(response.data.success) {
-                setShowForm(false);
                 setInvoice(toSubmit);
+                setShowForm(false);
             }
             else {
                 alert(response.data.msg);
@@ -282,10 +301,11 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
             total += items[i].total;
         }
 
-        const toSubmit = { ...formInvoice, items: items, total: total, status: 'Draft', created_by: '' };
+        const toSubmit = { ...formInvoice, items: items, total: total, status: 'Draft', created_by: user.username };
 
         try {
-            const response = await axios.post();
+            //const response = await axios.post();
+            const response = await api.post('invoices', toSubmit);
 
             console.log(response);
 
@@ -311,15 +331,15 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
             total += items[i].total;
         }
 
-        const toSubmit = { ...formInvoice, items: items, status: 'Pending', total: total, created_by: '' };
+        const toSubmit = { ...formInvoice, items: items, status: 'Pending', total: total, created_by: user.username };
 
         try {
-            const response = await axios.post();
+            //const response = await axios.post(REACT_APP_API_URL.concat('invoices'), toSubmit);
+            const response = await api.post('invoices', toSubmit)
 
             console.log(response);
 
             if(response.data.success) {
-                setShowForm(false);
                 appendToFilteredInvoices({ ...toSubmit, _id: response.data.id });
             }
             else {
@@ -430,6 +450,16 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                                     fullWidth 
                                     name='clientName' 
                                     value={formInvoice.clientName} 
+                                    onChange={handleClientChange}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <CustomInputLabel>Client's Email</CustomInputLabel>
+                                <CustomTextField 
+                                    fullWidth
+                                    name='clientEmail' 
+                                    value={formInvoice.clientEmail} 
                                     onChange={handleClientChange}
                                 />
                             </Grid>
@@ -748,13 +778,11 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                     {!isEdit && (
                         <>
                             <Button 
+                                className={styles.invoiceButton}
                                 onClick={handleDiscard} 
-                                sx={{ 
-                                    fontWeight: 600,
+                                sx={{
                                     bgcolor: '#F9FAFE', 
-                                    color: '#7E88C3', 
-                                    borderRadius: '30px', 
-                                    padding: '1rem 1.5rem' 
+                                    color: '#7E88C3'
                                 }}
                             >
                                 Discard
@@ -762,26 +790,22 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                             
                             <Box>
                                 <Button 
+                                    className={styles.invoiceButton}
                                     onClick={handleSaveDraft}
                                     sx={{
-                                        fontWeight: 600,
                                         bgcolor: '#373B53', 
-                                        color: 'text--2', 
-                                        borderRadius: '30px', 
-                                        padding: '1rem 1.5rem'
+                                        color: 'text--2'
                                     }}    
                                 >
                                     Save as Draft
                                 </Button>
 
                                 <Button 
+                                    className={styles.invoiceButton}
                                     onClick={handleSave} 
                                     sx={{ 
-                                        fontWeight: 600,
                                         bgcolor: 'primaryPurple', 
                                         color: 'white', 
-                                        borderRadius: '30px', 
-                                        padding: '1rem 1.5rem',
                                         ml: '1rem',
                                         ':hover': { bgcolor: 'secondaryPurple' } 
                                     }}
@@ -796,11 +820,10 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                         <>
                             <Box>
                                 <Button 
+                                    className={styles.invoiceButton}
                                     sx={{ 
                                         color: 'text--3', 
-                                        bgcolor: 'editButton', 
-                                        borderRadius: '25px', 
-                                        padding: '1rem 1.5rem' 
+                                        bgcolor: 'editButton'
                                     }}
                                     onClick={() => setShowForm(false)}
                                 >
@@ -808,11 +831,10 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                                 </Button>
 
                                 <Button 
+                                    className={styles.invoiceButton}
                                     sx={{ 
                                         color: 'white', 
                                         bgcolor: 'primaryPurple', 
-                                        borderRadius: '30px', 
-                                        padding: '1rem 1.5rem', 
                                         ml: '1rem',
                                         ':hover': { bgcolor: 'secondaryPurple' }  
                                     }}

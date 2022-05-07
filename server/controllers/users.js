@@ -50,6 +50,19 @@ export async function loginUser(req, res) {
     }
 }
 
+export async function logoutUser(req, res) {
+    const { user } = req;
+
+    try {
+        
+    } 
+    catch(error) {
+        console.log(error);
+
+        res.json({ success: false, msg: 'Failed to log user out' });
+    }
+}
+
 export async function createUser(req, res) {
     const { username, password } = req.body;
 

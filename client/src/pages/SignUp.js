@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import styles from '../styles/Home.module.css';
 import { useNavigate } from "react-router-dom";
+import api from "../api/api";
 
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
@@ -18,13 +19,20 @@ export default function SignUpPage() {
         const toSubmit = { username: username, password: password };
 
         try {
-            const response = await axios.post(REACT_APP_API_URL.concat('users/register'), toSubmit);
+            //const response = await axios.post(REACT_APP_API_URL.concat('users/register'), toSubmit);
+            const response = await api.post('users/register', toSubmit);
 
             console.log(response);
-
-            localStorage.setItem('user', response.data.user);
-
-            navigate('/home');
+            
+            if(response.data.success) {
+                //const { user } = response.data;
+                localStorage.setItem('user', response.data.user.token);
+                
+                navigate('/');
+            }
+            else {
+                alert(response.data.msg);
+            }
         } 
         catch(error) {
             console.log(error);    
