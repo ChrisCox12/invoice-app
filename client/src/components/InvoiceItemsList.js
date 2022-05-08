@@ -1,4 +1,12 @@
-import { Table, TableBody, TableHead, TableCell, TableRow, TableContainer, Box, Typography } from '@mui/material';
+import { 
+    Box, 
+    Table, 
+    TableBody, 
+    TableCell, 
+    TableContainer, 
+    TableHead, 
+    TableRow, 
+    Typography } from '@mui/material';
 import styles from '../styles/Home.module.css';
 
 

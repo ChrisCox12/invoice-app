@@ -4,11 +4,11 @@ import { validateToken } from '../middleware/validateToken.js';
 
 const router = express.Router();
 
-router.get('/:id', getInvoice);
+router.get('/:id', validateToken, getInvoice);
 
-router.get('/user/:user', getUserInvoices);
+router.get('/user/:user', validateToken, getUserInvoices);
 
-router.post('/', createInvoice);
+router.post('/', validateToken, createInvoice);
 
 router.patch('/:id', validateToken, updateInvoice);
 

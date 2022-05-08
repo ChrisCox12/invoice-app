@@ -1,9 +1,6 @@
-import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import jwt_decode from 'jwt-decode';
-import axios from "axios";
-import Sidebar from "../components/Sidebar";
 import { Box, AppBar, Typography, Menu, MenuItem, Button } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -11,13 +8,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import EmptyIllustration from '../assets/illustration-empty.svg';
-import styles from '../styles/Home.module.css';
 import InvoicesList from "../components/InvoicesList";
 import InvoiceForm from "../components/InvoiceForm";
-import api from "../api/api";
-
-
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+import axiosInstance from "../utils/axios";
+import styles from '../styles/Home.module.css';
 
 
 function CustomCheckBoxIcon(props) {
@@ -39,8 +33,7 @@ function CustomBlankCheckBoxIcon(props) {
 }
 
 
-export default function HomePage({ setMode, mode }) {
-    const [user, setUser] = useState({});
+export default function HomePage() {
     const [invoices, setInvoices] = useState([]);
     const [filteredInvoices, setFilteredInvoices] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -48,6 +41,7 @@ export default function HomePage({ setMode, mode }) {
     const [filter, setFilter] = useState('');
     const [showForm, setShowForm] = useState(false);
     const navigate = useNavigate();
+    
 
     useEffect(() => {
         const controller = new AbortController();
@@ -57,20 +51,12 @@ export default function HomePage({ setMode, mode }) {
             navigate('/login');
         }
         else {
-            //console.log(userToken)
-            //console.log('found user token')
-            setUser( jwt_decode(userToken) );
-            //console.log(jwt_decode(userToken))
             getInvoices( jwt_decode(userToken) );
         }
 
         async function getInvoices(user) {
             try {
-                //const response = await axios.get(REACT_APP_API_URL.concat('invoices/', user.username));
-                
-                const response = await api.get(`invoices/user/${user.username}`);
-
-                console.log(response);
+                const response = await axiosInstance.get(`invoices/user/${user.username}`);
 
                 if(response.data.success) {
                     setInvoices(response.data.invoices);
@@ -81,7 +67,7 @@ export default function HomePage({ setMode, mode }) {
                 }
             } 
             catch(error) {
-                console.log(error)    
+                console.log(error);  
             }
         }
 
@@ -176,7 +162,7 @@ export default function HomePage({ setMode, mode }) {
                         variant='text'
                         endIcon={filterOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         onClick={handleMenu}
-                        sx={{ color: 'secondaryPurple' }}
+                        sx={{ color: 'secondaryPurple', mr: '0.75rem' }}
                     >
                         Filter
                     </Button>
@@ -233,10 +219,11 @@ export default function HomePage({ setMode, mode }) {
                             color: 'white',
                             bgcolor: 'primaryPurple',
                             borderRadius: '1.5rem',
+                            padding: '0.25rem 0.75rem 0.25rem 0.25rem',
                             ':hover': { bgcolor: 'secondaryPurple' }
                         }}
                     >
-                        <AddCircleIcon fontSize='large' />
+                        <AddCircleIcon fontSize='large' sx={{ mr: '0.25rem' }}  />
                         New
                     </Button>
                 </Box>
@@ -255,8 +242,6 @@ export default function HomePage({ setMode, mode }) {
                 setShowForm={setShowForm} 
                 appendToFilteredInvoices={appendToFilteredInvoices} 
             />
-        </Box>
-        
-        
-    )
+        </Box>  
+    );
 }

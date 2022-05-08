@@ -1,15 +1,15 @@
-import { AppBar, Toolbar, Box, Divider, Menu, MenuItem, SvgIcon, IconButton, Typography } from "@mui/material";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppBar, Box, Divider, IconButton, Typography } from "@mui/material";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logo from '../assets/logo.svg';
 import styles from '../styles/Home.module.css';
-import { useNavigate } from "react-router-dom";
 
 
 export default function Sidebar({ setMode, mode }) {
     const navigate = useNavigate();
+
 
     async function handleLogOut(e) {
         e.preventDefault();
@@ -17,6 +17,7 @@ export default function Sidebar({ setMode, mode }) {
         localStorage.removeItem('user');
         navigate('/login');
     }
+
 
     return (
         <AppBar
@@ -86,5 +87,5 @@ export default function Sidebar({ setMode, mode }) {
                 </Box>
             </Box>
         </AppBar>
-    )
+    );
 }

@@ -1,18 +1,15 @@
-import { Box, Typography, TextField, Stack, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import { Box, Typography, TextField, Stack, Button } from "@mui/material";
+import axiosInstance from "../utils/axios.js";
 import styles from '../styles/Home.module.css';
-import api from "../api/api.js";
 
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    //console.log(REACT_APP_API_URL)
 
     useEffect(() => {
         if(localStorage.getItem('user')) {
@@ -27,10 +24,7 @@ export default function Login() {
         const toSubmit = { username: username, password: password };
 
         try {
-            //const response = await axios.post(REACT_APP_API_URL.concat('users/login'), toSubmit);
-            const response = await api.post('users/login', toSubmit);
-
-            console.log(response);
+            const response = await axiosInstance.post('users/login', toSubmit);
 
             if(response.data.success) {
                 localStorage.setItem('user', response.data.user.token);
@@ -44,6 +38,7 @@ export default function Login() {
             console.log(error);
         }
     }
+
 
     return (
         <Box width='100%' height='100vh' display='flex' alignItems='center' justifyContent='center'>
@@ -65,5 +60,5 @@ export default function Login() {
                 <Button variant='text' type='button' onClick={() => navigate('/signup')}>No account? Sign up here</Button>
             </Stack>
         </Box>
-    )
+    );
 }

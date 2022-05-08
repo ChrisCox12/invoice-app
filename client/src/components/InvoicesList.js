@@ -1,10 +1,12 @@
-import { Stack, Typography, Box, Grid } from "@mui/material";
-import format from "date-fns/format";
 import { useNavigate } from "react-router-dom";
+import format from "date-fns/format";
+import { Stack, Typography, Box } from "@mui/material";
+
 
 export default function InvoicesList({ invoices }) {
     const navigate = useNavigate();
     
+
     return (
         <Stack spacing={2} width='100%'>
             {invoices.map(invoice => {
@@ -12,7 +14,8 @@ export default function InvoicesList({ invoices }) {
                 const invoiceDueDate = format(new Date(invoice.paymentDue), 'dd MMM yyyy');
                 const invoiceStatusColor = invoice.status === 'Paid' ? 'statusColorPaid' : invoice.status === 'Pending' ? 'statusColorPending' : 'statusColorDraft'; 
                 const invoiceStatusBackground = invoice.status === 'Paid' ? 'statusBgPaid' : invoice.status === 'Pending' ? 'statusBgPending' : 'statusBgDraft';
-                console.log(invoiceStatusColor)
+
+                
                 return (
                     <Box
                         display='grid' 
@@ -86,7 +89,7 @@ export default function InvoicesList({ invoices }) {
                             alignItems='center' 
                             justifyContent='center' 
                             bgcolor={invoiceStatusBackground}
-                            sx={{ borderRadius: '5px', color: invoiceStatusColor }}
+                            sx={{ borderRadius: '5px', color: invoiceStatusColor, padding: '0.25rem 0' }}
                         >
                             {invoice.status}
                         </Box>
@@ -94,5 +97,5 @@ export default function InvoicesList({ invoices }) {
                 );
             })}
         </Stack>
-    )
+    );
 }

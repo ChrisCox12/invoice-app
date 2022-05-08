@@ -1,9 +1,9 @@
-import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
+import Sidebar from "./Sidebar";
 
-export default function Layout({ setMode, mode}) {
 
+export default function Layout({ setMode, mode }) {
     return (
         <Box
             width='100%' 
@@ -18,5 +18,5 @@ export default function Layout({ setMode, mode}) {
             <Sidebar setMode={setMode} mode={mode} />
             <Outlet />
         </Box>
-    )
+    );
 }

@@ -1,15 +1,19 @@
 import Invoice from "../models/invoice.js";
-import jwt from 'jsonwebtoken';
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 export async function getInvoice(req, res) {
     const { id } = req.params;
+    const { user } = req;
 
     try {
         const invoice = await Invoice.findById(id);
 
-        res.json({ success: true, invoice: invoice });
+        if(user.username === invoice.created_by) {
+            res.json({ success: true, invoice: invoice });
+        }
+        else {
+            res.json({ success: false, msg: 'You are not authorized to access that invoice' });
+        }
     } 
     catch(error) {
         console.log(error);
@@ -18,10 +22,15 @@ export async function getInvoice(req, res) {
 }
 
 export async function getUserInvoices(req, res) {
-    const { user } = req.params;
+    const userFromParams = req.params.user;
+    const userFromToken = req.user;
+
+    if(userFromParams !== userFromToken.username) {
+        return res.json({ success: false, msg: 'You are not authorized to access these invoices' });
+    }
 
     try {
-        const invoices = await Invoice.find({ created_by: user });
+        const invoices = await Invoice.find({ created_by: userFromParams });
 
         res.json({ success: true, invoices: invoices });
     } 
@@ -39,7 +48,7 @@ export async function createInvoice(req, res) {
 
         console.log(`Creating invoice: ${invoice}`);
 
-        res.json({ success: true, msg: 'Successfully created invoice' });
+        res.json({ success: true, msg: 'Successfully created invoice', id: invoice._id });
     } 
     catch(error) {
         console.log(error);
@@ -50,8 +59,6 @@ export async function createInvoice(req, res) {
 export async function updateInvoice(req, res) {
     const { id } = req.params;
     const { user } = req;
-
-    //console.log('update invoice user: ', user)
 
     try {
         const invoice = await Invoice.findById(id);

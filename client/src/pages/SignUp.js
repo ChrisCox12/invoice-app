@@ -1,11 +1,8 @@
-import { Box, Typography, Stack, Button, TextField } from "@mui/material";
 import { useState } from "react";
-import axios from "axios";
-import styles from '../styles/Home.module.css';
 import { useNavigate } from "react-router-dom";
-import api from "../api/api";
-
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+import { Box, Typography, Stack, Button, TextField } from "@mui/material";
+import axiosInstance from "../utils/axios";
+import styles from '../styles/Home.module.css';
 
 
 export default function SignUpPage() {
@@ -13,21 +10,17 @@ export default function SignUpPage() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+
     async function handleSignUp(e) {
         e.preventDefault();
 
         const toSubmit = { username: username, password: password };
 
         try {
-            //const response = await axios.post(REACT_APP_API_URL.concat('users/register'), toSubmit);
-            const response = await api.post('users/register', toSubmit);
-
-            console.log(response);
+            const response = await axiosInstance.post('users/register', toSubmit);
             
             if(response.data.success) {
-                //const { user } = response.data;
                 localStorage.setItem('user', response.data.user.token);
-                
                 navigate('/');
             }
             else {
@@ -37,8 +30,6 @@ export default function SignUpPage() {
         catch(error) {
             console.log(error);    
         }
-
-
     }
 
 
@@ -62,5 +53,5 @@ export default function SignUpPage() {
                 <Button variant='text' type='button' onClick={() => navigate('/')}>Already have an account? Sign in</Button>
             </Stack>
         </Box>
-    )
+    );
 }

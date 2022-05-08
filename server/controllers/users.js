@@ -1,11 +1,11 @@
 import User from '../models/user.js';
 import jwt from 'jsonwebtoken';
 
+
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-export async function getAllUsers(req, res) {
-    //console.log(req.user)
 
+export async function getAllUsers(req, res) {
     try {
         const users = await User.find();
 

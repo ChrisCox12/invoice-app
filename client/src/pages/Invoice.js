@@ -1,27 +1,33 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
-import axios from 'axios';
-import { AppBar, Box, Button, Stack, Typography, Dialog, DialogActions, DialogContent, Grid, DialogTitle } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import format from "date-fns/format";
+import { 
+    AppBar, 
+    Box, 
+    Button, 
+    Dialog, 
+    DialogActions, 
+    DialogContent, 
+    DialogTitle,  
+    Grid, 
+    Stack, 
+    Typography } from '@mui/material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import InvoiceForm from '../components/InvoiceForm.js';
 import InvoiceItemsList from '../components/InvoiceItemsList.js';
+import axiosInstance from '../utils/axios.js';
 import styles from '../styles/Home.module.css';
-import api from '../api/api.js';
-
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 
 export default function InvoicePage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [invoice, setInvoice] = useState(null);
-    const [user, setUser] = useState({});
     const [showForm, setShowForm] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const invoiceStatusColor = invoice?.status === 'Paid' ? 'statusColorPaid' : invoice?.status === 'Pending' ? 'statusColorPending' : 'statusColorDraft';
     const invoiceStatusBackground = invoice?.status === 'Paid' ? 'statusBgPaid' : invoice?.status === 'Pending' ? 'statusBgPending' : 'statusBgDraft'; 
+
 
     useEffect(() => {
         const controller = new AbortController();
@@ -31,18 +37,16 @@ export default function InvoicePage() {
             navigate('/');
         }
         else{
-            setUser( jwt_decode(token) );
             getInvoice(id);
         }
 
         async function getInvoice(id) {
             try {
-                //const response = await axios.get(REACT_APP_API_URL.concat('invoice/', id));
-                const response = await api.get(`invoices/${id}`);
+                const response = await axiosInstance.get(`invoices/${id}`);
 
                 if(response.data.success) {
                     setInvoice(response.data.invoice);
-                }
+                } 
                 else {
                     alert(response.data.msg);
                 }
@@ -53,16 +57,15 @@ export default function InvoicePage() {
         }
 
         return () => controller.abort();
-    }, []);
+    }, [id]);
 
 
     async function handleDelete(e) {
         e.preventDefault();
 
         try {
-            //const response = await axios.delete(REACT_APP_API_URL.concat('invoices/', id));
-            const response = await api.delete(`invoices/${id}`);
-
+            const response = await axiosInstance.delete(`invoices/${id}`);
+            
             if(response.data.success) {
                 navigate('/');
             }
@@ -81,13 +84,7 @@ export default function InvoicePage() {
         const toSubmit = { ...invoice, status: 'Paid' };
 
         try {
-            //const response = await axios.patch(REACT_APP_API_URL.concat('invoices/', id), toSubmit);
-            const response = await api.patch(
-                `invoices/${id}`, 
-                toSubmit,
-                { 
-                    headers: { 'authorization': `Bearer ${localStorage.getItem('user')}` } 
-                });
+            const response = await axiosInstance.patch(`invoices/${id}`, toSubmit);
 
             if(response.data.success) {
                 setInvoice(toSubmit);
@@ -107,13 +104,7 @@ export default function InvoicePage() {
         const toSubmit = { ...invoice, status: 'Pending' };
 
         try {
-            //const response = await axios.patch(REACT_APP_API_URL.concat('invoices/', id), toSubmit);
-            const response = await axios.patch(
-                `invoices/${id}`, 
-                toSubmit, 
-                { 
-                    headers: { 'authorization': `Bearer ${localStorage.getItem('user')}` } 
-                });
+            const response = await axiosInstance.patch(`invoices/${id}`, toSubmit);
 
             if(response.data.success) {
                 setInvoice(toSubmit);

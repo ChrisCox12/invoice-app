@@ -1,18 +1,26 @@
-import { Slide, Box, Button, Typography, Stack, TextField, Grid, Menu, MenuItem, IconButton, AppBar } from "@mui/material";
 import { useEffect, useState } from "react";
+import { 
+    AppBar, 
+    Box, 
+    Button, 
+    Grid, 
+    IconButton, 
+    Menu, 
+    MenuItem, 
+    Slide, 
+    Stack, 
+    TextField, 
+    Typography } from "@mui/material";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import axios from 'axios';
-import styles from '../styles/Home.module.css';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import api from "../api/api";
 import jwtDecode from "jwt-decode";
-
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+import axiosInstance from "../utils/axios";
+import styles from '../styles/Home.module.css';
 
 
 function CustomTextField(props) {
@@ -28,7 +36,7 @@ function CustomTextField(props) {
             }}
             {...props}
         />
-    )
+    );
 }
 
 function CustomInputLabel(props) {
@@ -37,7 +45,7 @@ function CustomInputLabel(props) {
             sx={{ color: 'text--4' }}
             {...props}
         />
-    )
+    );
 }
 
 function CustomSectionHead(props) {
@@ -46,7 +54,7 @@ function CustomSectionHead(props) {
             sx={{ color: 'primaryPurple' }}
             {...props}
         />
-    )
+    );
 }
 
 
@@ -90,13 +98,11 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
         }
         
         if(localStorage.getItem('user')){
-           const decodedToken = jwtDecode( localStorage.getItem('user') );
+            const decodedToken = jwtDecode( localStorage.getItem('user') );
             setUser(decodedToken); 
         }
-        
     }, []);
 
-    useEffect(() => {console.log(user)}, [user])
 
     function handleClose() {
         setAnchorEl(null);
@@ -269,15 +275,7 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
         const toSubmit = { ...formInvoice, total: total, items: items };
 
         try {
-            //const response = await axios.patch();
-            const response = await api.patch(
-                `invoices/${invoice._id}`, 
-                toSubmit, 
-                { 
-                    headers: { 'authorization': `Bearer ${localStorage.getItem('user')}` } 
-                });
-
-            console.log(response);
+            const response = await axiosInstance.patch(`invoices/${invoice._id}`, toSubmit);
 
             if(response.data.success) {
                 setInvoice(toSubmit);
@@ -301,17 +299,20 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
             total += items[i].total;
         }
 
-        const toSubmit = { ...formInvoice, items: items, total: total, status: 'Draft', created_by: user.username };
+        const toSubmit = { 
+            ...formInvoice, 
+            items: items, 
+            total: total, 
+            status: 'Draft', 
+            created_by: user.username 
+        };
 
         try {
-            //const response = await axios.post();
-            const response = await api.post('invoices', toSubmit);
-
-            console.log(response);
+            const response = await axiosInstance.post('invoices', toSubmit);
 
             if(response.data.success) {
-                setShowForm(false);
                 appendToFilteredInvoices({ ...toSubmit, _id: response.data.id });
+                setShowForm(false);
             }
             else {
                 alert(response.data.msg);
@@ -331,16 +332,20 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
             total += items[i].total;
         }
 
-        const toSubmit = { ...formInvoice, items: items, status: 'Pending', total: total, created_by: user.username };
+        const toSubmit = { 
+            ...formInvoice, 
+            items: items, 
+            status: 'Pending', 
+            total: total, 
+            created_by: user.username 
+        };
 
         try {
-            //const response = await axios.post(REACT_APP_API_URL.concat('invoices'), toSubmit);
-            const response = await api.post('invoices', toSubmit)
-
-            console.log(response);
+            const response = await axiosInstance.post('invoices', toSubmit);
 
             if(response.data.success) {
                 appendToFilteredInvoices({ ...toSubmit, _id: response.data.id });
+                setShowForm(false);
             }
             else {
                 alert(response.data.msg);
@@ -848,5 +853,5 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                 </AppBar>
             </Box>
         </Slide>
-    )
+    );
 }
