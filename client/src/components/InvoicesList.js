@@ -77,7 +77,7 @@ export default function InvoicesList({ invoices }) {
                             $ {invoiceTotal}
                         </Box>
 
-                        <Box gridColumn={{ xs: 'span 6' }} sx={{ display: { xs: 'block', sm: 'none' } }}>
+                        <Box gridColumn={{ xs: 'span 6' }} sx={{ display: { xs: 'block', sm: 'none' }, color: 'text--2' }}>
                             <Typography>Due {invoiceDueDate}</Typography>
                             <Typography sx={{ color: 'text--1' }}>$ {invoiceTotal}</Typography>
                         </Box>

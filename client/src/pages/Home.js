@@ -123,17 +123,17 @@ export default function HomePage() {
 
     return (
         <Box
-        width={'100%'} 
-        height={'100vh'}
+        width='100%' 
+        height='100vh'
         sx={{
             p: { 
-                xs: '2rem 1.5rem 0', 
-                sm: '3.5rem 3rem 0', 
-                lg: '4.5rem 22rem 0 15.75rem' 
+                xs: '2rem 1.5rem', 
+                sm: '3.5rem 5rem', 
+                lg: '4.5rem 15.75rem',
+                xl: '5rem 25rem' 
             },
             minWidth: { xs: '24rem', md: 'auto' },
-            maxHeight: { md: '100%' },
-            overflowY: { md: 'scroll' },
+            overflowY:  'scroll' ,
             position: 'relative'
         }}
         >
@@ -233,7 +233,11 @@ export default function HomePage() {
                <InvoicesList invoices={filteredInvoices} />
                :
                <Box>
-                   <img src={EmptyIllustration} />
+                   <img src={EmptyIllustration} alt='No invoices found' />
+                   <Typography sx={{ color: 'text--1' }}>
+                       There is nothing here. {' '} 
+                       Create an invoice by clicking the New Invoice button and get started
+                    </Typography>
                </Box> 
             }
 

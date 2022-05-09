@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Stack, Button, TextField } from "@mui/material";
 import axiosInstance from "../utils/axios";
-import styles from '../styles/Home.module.css';
 
 
 export default function SignUpPage() {
@@ -36,7 +35,8 @@ export default function SignUpPage() {
     return (
         <Box width='100%' height='100vh' display='flex' alignItems='center' justifyContent='center'>
             <Stack component='form' spacing={2} onSubmit={handleSignUp}>
-                <Typography className={styles.conn}>Login</Typography>
+                <Typography component='h1' variant='h2' sx={{ color: 'primaryPurple', fontWeight: 700, textAlign: 'center' }}>Invoice App</Typography>
+                <Typography>Welcome, please sign up to begin using this app today!</Typography>
                 <TextField
                     label='Username'
                     type='text'
@@ -49,7 +49,7 @@ export default function SignUpPage() {
                     required
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button variant='contained' type='submit'>Sign Up</Button>
+                <Button variant='contained' type='submit' sx={{ bgcolor: 'primaryPurple', ':hover': { bgcolor: 'secondaryPurple' } }}>Sign Up</Button>
                 <Button variant='text' type='button' onClick={() => navigate('/')}>Already have an account? Sign in</Button>
             </Stack>
         </Box>

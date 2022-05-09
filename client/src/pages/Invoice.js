@@ -129,7 +129,7 @@ export default function InvoicePage() {
 
     return (
         <Box
-            minHeight='100vh'
+            height='100vh'
             width='100%'
             sx={{
                 padding: { 
@@ -137,10 +137,11 @@ export default function InvoicePage() {
                     sm: '3rem 2.5rem', 
                     md: '4rem', 
                     lg: '4rem 10rem', 
-                    xl: '4rem 22rem 4rem 15.75rem' ,
+                    xl: '4.5rem 22rem' ,
                     position: 'relative'
                 },
-                zIndex: 1
+                zIndex: 1,
+                overflowY: 'scroll'
             }}
         >
             <Stack spacing={2}>

@@ -7,7 +7,7 @@ import userRoutes from './routes/users.js';
 import invoiceRoutes from './routes/invoices.js';
 
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 const app = express();
 
