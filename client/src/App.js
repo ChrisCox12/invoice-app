@@ -11,6 +11,7 @@ import Layout from './components/Layout';
 
 export default function App() {
     const [mode, setMode] = useState(true);
+    const [newUser, setNewUser] = useState(false);
 
     const lightTheme = {
         palette: {
@@ -84,20 +85,24 @@ export default function App() {
 
     const customTheme = createTheme(mode ? lightTheme : darkTheme);
 
+    function isNewUser() {
+        setNewUser(true);
+    }
+
     return (
         <ThemeProvider theme={customTheme}>
             <CssBaseline />
             <Router>
                 <Routes>
                     <Route element={<Layout setMode={setMode} mode={mode} />}>
-                        <Route index element={<HomePage />} />
-                        <Route path='home' element={<HomePage />}/>
+                        <Route index element={<HomePage newUser={newUser} />} />
+                        <Route path='home' element={<HomePage newUser={newUser} />}/>
                         <Route path='invoice/:id' element={<InvoicePage />} />
                     </Route>
                     
                     
                     <Route path='/login' element={<Login />} />
-                    <Route path='/signup' element={<SignUpPage />} />
+                    <Route path='/signup' element={<SignUpPage isNewUser={isNewUser} />} />
                 </Routes>
             </Router>
         </ThemeProvider>  

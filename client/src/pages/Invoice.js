@@ -11,7 +11,8 @@ import {
     DialogTitle,  
     Grid, 
     Stack, 
-    Typography } from '@mui/material';
+    Typography 
+} from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import InvoiceForm from '../components/InvoiceForm.js';
 import InvoiceItemsList from '../components/InvoiceItemsList.js';
@@ -25,13 +26,14 @@ export default function InvoicePage() {
     const [invoice, setInvoice] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
     const invoiceStatusColor = invoice?.status === 'Paid' ? 'statusColorPaid' : invoice?.status === 'Pending' ? 'statusColorPending' : 'statusColorDraft';
     const invoiceStatusBackground = invoice?.status === 'Paid' ? 'statusBgPaid' : invoice?.status === 'Pending' ? 'statusBgPending' : 'statusBgDraft'; 
 
 
     useEffect(() => {
         const controller = new AbortController();
-        const token = localStorage.getItem('user');
+        const token = localStorage.getItem('invoice-app-user');
 
         if(!token) {
             navigate('/');
@@ -48,7 +50,7 @@ export default function InvoicePage() {
                     setInvoice(response.data.invoice);
                 } 
                 else {
-                    alert(response.data.msg);
+                    setErrorMsg(response.data.msg);
                 }
             } 
             catch(error) {
@@ -70,7 +72,7 @@ export default function InvoicePage() {
                 navigate('/');
             }
             else {
-                alert(response.data.msg);
+                setErrorMsg(response.data.msg);
             }
         } 
         catch(error) {
@@ -90,7 +92,7 @@ export default function InvoicePage() {
                 setInvoice(toSubmit);
             }
             else {
-                alert(response.data.msg)
+                setErrorMsg(response.data.msg);
             }
         } 
         catch(error) {
@@ -110,7 +112,7 @@ export default function InvoicePage() {
                 setInvoice(toSubmit);
             }
             else {
-                alert(response.data.msg);
+                setErrorMsg(response.data.msg);
             }
         } 
         catch(error) {
@@ -154,6 +156,8 @@ export default function InvoicePage() {
                 </Button>
 
                 <Box>
+                    {errorMsg && <Typography textAlign='center' bgcolor='red' color='white' fontWeight={700} borderRadius='7px' padding='0.5rem'>Error: {errorMsg}</Typography>}
+
                     <AppBar
                         className={styles.invoiceAppBar}
                         position='static'

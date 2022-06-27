@@ -6,11 +6,13 @@ import {
     TableContainer, 
     TableHead, 
     TableRow, 
-    Typography } from '@mui/material';
+    Typography 
+} from '@mui/material';
 import styles from '../styles/Home.module.css';
 
 
 export default function InvoiceItemsList({ items }) {
+    
     return (
         <TableContainer sx={{ bgcolor: 'invoiceItemsBackground', borderRadius: '7px 7px 0 0', padding: '0 0 1rem 0' }}>
             <Table>

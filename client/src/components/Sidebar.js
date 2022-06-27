@@ -14,7 +14,7 @@ export default function Sidebar({ setMode, mode }) {
     async function handleLogOut(e) {
         e.preventDefault();
 
-        localStorage.removeItem('user');
+        localStorage.removeItem('invoice-app-user');
         navigate('/login');
     }
 

@@ -4,6 +4,7 @@ import Sidebar from "./Sidebar";
 
 
 export default function Layout({ setMode, mode }) {
+    
     return (
         <Box
             width='100%' 

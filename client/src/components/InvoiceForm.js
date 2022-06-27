@@ -10,7 +10,8 @@ import {
     Slide, 
     Stack, 
     TextField, 
-    Typography } from "@mui/material";
+    Typography 
+} from "@mui/material";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -88,6 +89,7 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
     const [openMenu, setOpenMenu] = useState(false);
     const [items, setItems] = useState([]);
     const [user, setUser] = useState(null);
+    const [errorMsg, setErrorMsg] = useState('');
 
 
     useEffect(() => {
@@ -282,7 +284,7 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                 setShowForm(false);
             }
             else {
-                alert(response.data.msg);
+                setErrorMsg(response.data.msg);
             }
         } 
         catch(error) {
@@ -315,7 +317,7 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                 setShowForm(false);
             }
             else {
-                alert(response.data.msg);
+                setErrorMsg(response.data.msg);
             }
         } 
         catch(error) {
@@ -348,7 +350,7 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                 setShowForm(false);
             }
             else {
-                alert(response.data.msg);
+                setErrorMsg(response.data.msg);
             }
         } 
         catch(error) {
@@ -393,6 +395,8 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                         <>New Invoice</>
                     }
                 </Typography>
+
+                {errorMsg && <Typography textAlign='center' bgcolor='red' color='white' fontWeight={700} borderRadius='7px' padding='0.5rem'>Error: {errorMsg}</Typography>}
 
                 <Stack spacing={{ xs: '2.5rem' }}>
                     <Box>
@@ -763,6 +767,8 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
                         </Button>
                     </Box>
                 </Stack>
+
+                {errorMsg && <Typography textAlign='center' bgcolor='red' color='white' fontWeight={700} borderRadius='7px' padding='0.5rem'>Error: {errorMsg}</Typography>}
 
                 <AppBar
                     position='static'

@@ -46,7 +46,7 @@ export async function createInvoice(req, res) {
 
         await invoice.save();
 
-        console.log(`Creating invoice: ${invoice}`);
+        //console.log(`Creating invoice: ${invoice}`);
 
         res.json({ success: true, msg: 'Successfully created invoice', id: invoice._id });
     } 

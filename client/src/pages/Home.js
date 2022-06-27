@@ -33,25 +33,30 @@ function CustomBlankCheckBoxIcon(props) {
 }
 
 
-export default function HomePage() {
+export default function HomePage({ newUser }) {
     const [invoices, setInvoices] = useState([]);
     const [filteredInvoices, setFilteredInvoices] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [filterOpen, setFilterOpen] = useState(false);
     const [filter, setFilter] = useState('');
     const [showForm, setShowForm] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
     const navigate = useNavigate();
     
 
     useEffect(() => {
         const controller = new AbortController();
-        const userToken = localStorage.getItem('user');
+        const userToken = localStorage.getItem('invoice-app-user');
 
         if(!userToken) {
             navigate('/login');
         }
         else {
-            getInvoices( jwt_decode(userToken) );
+            if(newUser) return;
+
+            const decodedToken = jwt_decode(userToken);
+
+            getInvoices(decodedToken); 
         }
 
         async function getInvoices(user) {
@@ -63,7 +68,7 @@ export default function HomePage() {
                     setFilteredInvoices(response.data.invoices);
                 }
                 else {
-                    alert(response.data.msg);
+                    setErrorMsg(response.data.msg);
                 }
             } 
             catch(error) {
@@ -72,7 +77,7 @@ export default function HomePage() {
         }
 
         return () => controller.abort();
-    }, []);
+    }, [newUser]);
 
 
     function handleClose() {
@@ -228,6 +233,8 @@ export default function HomePage() {
                     </Button>
                 </Box>
             </AppBar>
+
+            {errorMsg && <Typography textAlign='center' bgcolor='red' color='white' fontWeight={700} borderRadius='7px' padding='0.5rem'>Error: {errorMsg}</Typography>}
 
             {invoices.length > 0 ?
                <InvoicesList invoices={filteredInvoices} />

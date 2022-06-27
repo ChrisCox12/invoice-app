@@ -75,7 +75,7 @@ export async function createUser(req, res) {
 
             await newUser.save();
 
-            console.log(`Creating new user: ${newUser}`);
+            //console.log(`Creating new user: ${newUser}`);
 
             //  generate access token
             const token = jwt.sign(
