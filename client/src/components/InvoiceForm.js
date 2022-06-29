@@ -100,7 +100,7 @@ export default function InvoiceForm({ showForm, setShowForm, invoice, setInvoice
         }
         
         if(localStorage.getItem('user')){
-            const decodedToken = jwtDecode( localStorage.getItem('user') );
+            const decodedToken = jwtDecode( localStorage.getItem('invoice-app-user') );
             setUser(decodedToken); 
         }
     }, []);
