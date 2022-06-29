@@ -18,6 +18,10 @@ app.use(cors());
 app.use('/users', userRoutes);
 app.use('/invoices', invoiceRoutes);
 
+app.use('/', (req, res) => {
+    res.json('APP IS RUNNING');
+});
+
 
 mongoose
     .connect(DB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
