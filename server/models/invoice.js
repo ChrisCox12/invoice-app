@@ -49,7 +49,10 @@ const invoiceSchema = mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    paymentDue: Date,
+    paymentDue: {
+        type: Date,
+        default: Date.now()
+    },
     created_by: {
         type: String,
         required: true
